@@ -1,0 +1,33 @@
+SearchTopology
+
+Command to Start:
+$ storm jar Search.jar com.persist.SearchTopology search_config.json unique_topology_name
+
+Logical Structure:
+		KafkaSpout(just receive kafka messages from specific topic)
+		     |
+		     |
+                     V
+		SearchDownloadBolt(download images from hdfs or http, then put them to buffer)
+		     |
+		     |
+		     V
+		SearchComputeBolt(compute feature values of images in buffer)
+		     |      |
+		     |      |
+		     |      V
+		     | SearchNotifyBolt(search images with sample, then publish result)
+		     |	    |
+		     |	    |
+		     V      V
+		SearchRecordBolt(record image features or search results)
+
+Kafka Message Format:
+	{"url":"", "video_id":"", "time_stamp":"", "inner":false, "type":0}
+	Such as:
+	{"url": "http://f.hiphotos.baidu.com/image/pic/item/060828381f30e924bd73bbdf48086e061c95f70c.jpg","video_id": "test","time_stamp": "0","inner": false,"type", 0}
+
+Problem:
+1. How to invoke python with external modules 'thrift' in java to search similar images.
+2. How to publish search results.
+3. How to record image features and search results.
